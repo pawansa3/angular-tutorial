@@ -18,7 +18,21 @@ const routes: Routes = [
   //   path: '**',
   //   component: PageNotFoundComponent
   // }
-
+  {
+    path: 'lazy',
+    children: [
+      {
+        path: 'admin',
+        loadChildren: () => import('./lazy-loading-admin/lazy-loading-admin-routing.module')
+          .then(mod => mod.LazyLoadingAdminRoutingModule)
+      },
+      {
+        path: 'user',
+        loadChildren: () => import('./lazy-loading-user/lazy-loading-user-routing.module')
+          .then(mod => mod.LazyLoadingUserRoutingModule)
+      }
+    ]
+  }
 ];
 
 @NgModule({
