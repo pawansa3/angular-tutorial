@@ -1,0 +1,36 @@
+<h1>template-driven-form works!</h1>
+<!-- for prefilled add value to ngModel="someValue" -->
+
+<div class="col-sm-3">
+  <form #templateForm="ngForm" (ngSubmit)="handleSubmit(templateForm.value)">
+    <div class="form-group">
+      <label for="email">Email address:</label>
+      <input
+        type="email"
+        ngModel="{{ formData.email }}"
+        name="email"
+        #email="ngModel"
+        class="form-control"
+        required
+      />
+      <span *ngIf="email.invalid && email.touched" class="error"
+        >Email is required</span
+      >
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input
+        type="password"
+        required
+        #password="ngModel"
+        ngModel="{{ formData.password }}"
+        name="password"
+        class="form-control"
+      />
+      <span *ngIf="password.invalid && password.touched" class="error">
+        Password is required</span
+      >
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

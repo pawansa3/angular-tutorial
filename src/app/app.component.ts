@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
 import { UsersDataServiceService } from './users-data-service.service'
-import {ApiCallServiceService} from './api-call-service.service'
+import { ApiCallServiceService } from './api-call-service.service'
 
 import { dataType } from './users-models'
 
@@ -17,30 +17,30 @@ interface Alert {
 }
 
 const ALERTS: Alert[] = [{
-    type: 'success',
-    message: 'This is an success alert',
-  }, {
-    type: 'info',
-    message: 'This is an info alert',
-  }, {
-    type: 'warning',
-    message: 'This is a warning alert',
-  }, {
-    type: 'danger',
-    message: 'This is a danger alert',
-  }, {
-    type: 'primary',
-    message: 'This is a primary alert',
-  }, {
-    type: 'secondary',
-    message: 'This is a secondary alert',
-  }, {
-    type: 'light',
-    message: 'This is a light alert',
-  }, {
-    type: 'dark',
-    message: 'This is a dark alert',
-  }
+  type: 'success',
+  message: 'This is an success alert',
+}, {
+  type: 'info',
+  message: 'This is an info alert',
+}, {
+  type: 'warning',
+  message: 'This is a warning alert',
+}, {
+  type: 'danger',
+  message: 'This is a danger alert',
+}, {
+  type: 'primary',
+  message: 'This is a primary alert',
+}, {
+  type: 'secondary',
+  message: 'This is a secondary alert',
+}, {
+  type: 'light',
+  message: 'This is a light alert',
+}, {
+  type: 'dark',
+  message: 'This is a dark alert',
+}
 ];
 
 
@@ -50,12 +50,12 @@ const ALERTS: Alert[] = [{
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
 
-  dataFromUserService:any = ''
-  apiData:any=''
+
+  dataFromUserService: any = ''
+  apiData: any = ''
   // apiData=[{id:'',title:'', userId:''}]
-  constructor(private user:UsersDataServiceService, private apiUser: ApiCallServiceService) {
+  constructor(private user: UsersDataServiceService, private apiUser: ApiCallServiceService, private viewContainer: ViewContainerRef, private cfr: ComponentFactoryResolver) {
     this.reset();
 
     console.log(this.user.getData())
@@ -65,16 +65,17 @@ export class AppComponent {
     // calling the getData function to get data from apicall service
     this.apiUser.getData().subscribe((data: any) => {
       console.log(data)
-      this.apiData=data
+      this.apiData = data
     })
 
+    // lazy loading component on button click
 
   }
-  
+
   title = 'angular10_learn title from ts goes to app html is called property';
   appName = "my app name";
-  getName(){
-    return  this.appName + " is angular 10"
+  getName() {
+    return this.appName + " is angular 10"
   }
   obj = {
     name: this.appName,
@@ -88,8 +89,8 @@ export class AppComponent {
   myEvent(value: any) {
     console.log(value)
   }
-  currentVal=''
-  myEvent2(event: any){
+  currentVal = ''
+  myEvent2(event: any) {
     console.log(event.target.value)
     this.currentVal = event.target.value;
   }
@@ -97,12 +98,12 @@ export class AppComponent {
   enableBox() {
     this.disabledBox = false
   }
-  show=false
-  showstr='yes'
-  color="red"
+  show = false
+  showstr = 'yes'
+  color = "red"
 
-  dataArr=["anil", "peter", "mike"]
-  dataObj=[{name:"abc", age:25}, {name:"abc", age:25}, {name:"abc", age:25}]
+  dataArr = ["anil", "peter", "mike"]
+  dataObj = [{ name: "abc", age: 25 }, { name: "abc", age: 25 }, { name: "abc", age: 25 }]
 
   handleSubmit(value: any) {
     console.log(value)
@@ -115,7 +116,7 @@ export class AppComponent {
   // bootstrap alert funcitons
   alerts!: Alert[];
 
-  
+
 
   close(alert: Alert) {
     this.alerts.splice(this.alerts.indexOf(alert), 1);
@@ -127,32 +128,53 @@ export class AppComponent {
   // bootstrap alert funcitons
 
   // passing data to child component
-  dataForChild= { name:"pawan", age:25}
+  dataForChild = { name: "pawan", age: 25 }
 
   // passing data from child to parent component
-  parentComponentFunction(data:any){
+  parentComponentFunction(data: any) {
     console.log(data)
   }
 
-  dataFromChildToParent=''
-  parentComponentFunction2(data:any){
+  dataFromChildToParent = ''
+  parentComponentFunction2(data: any) {
     this.dataFromChildToParent = data
   }
 
   // pipes
   today = Date.now()
-  money=100
+  money = 100
 
   // data for model
   getDataModel() {
-    const data:dataType = {
-      name:'pawan kumar',
+    const data: dataType = {
+      name: 'pawan kumar',
       id: 100,
       indian: false,
       address: "nepal"
     }
     return data;
   }
+
+
+  // lazy loading component on button click
+
+  async loadAdmin() {
+    this.viewContainer.clear();
+    const { LazyAdminListComponent } = await import("./lazy-admin-list/lazy-admin-list.component")
+    this.viewContainer.createComponent(
+      this.cfr.resolveComponentFactory(LazyAdminListComponent)
+    )
+  }
+
+  async loadUser() {
+    this.viewContainer.clear();
+    const { LazyUserListComponent } = await import('./lazy-user-list/lazy-user-list.component')
+
+    this.viewContainer.createComponent(
+      this.cfr.resolveComponentFactory(LazyUserListComponent)
+    )
+  }
+
 }
 
 // interpolation is used when we want to take data from app.ts file to app.html file
